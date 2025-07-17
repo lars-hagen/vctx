@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node:*)",
+      "Bash(pnpm add:*)",
+      "Bash(jsrepo --version)",
+      "Bash(jsrepo list)",
+      "Bash(jsrepo:*)",
+      "mcp__playwright-default__browser_navigate",
+      "mcp__playwright-default__browser_snapshot",
+      "mcp__playwright-default__browser_click",
+      "mcp__playwright-default",
+      "Bash(npx jsrepo add:*)"
+    ],
+    "deny": []
+  }
+}
