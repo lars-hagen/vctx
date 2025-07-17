@@ -2,7 +2,7 @@
 
 Extract VS Code context for AI - open files, selections, and pinned tabs. Works with any VS Code-based IDE (VS Code, Cursor, etc.)
 
-[vctx.io](https://vctx.io)
+[vctx.io](https://vctx.io) | [npm](https://www.npmjs.com/package/vctx-cli)
 
 ## Features
 
@@ -15,13 +15,15 @@ Extract VS Code context for AI - open files, selections, and pinned tabs. Works 
 ## Installation
 
 ```bash
-npm install -g vctx
+npm install -g vctx-cli
 ```
 
 Or use directly with npx:
 ```bash
-npx vctx
+npx vctx-cli
 ```
+
+The CLI command is still `vctx` after installation.
 
 ## Usage
 

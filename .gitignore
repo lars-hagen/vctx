@@ -7,3 +7,6 @@ yarn-error.log*
 
 # YoYo AI version control directory
 .yoyo/
+
+# Landing page (separate project)
+vctx-landing/

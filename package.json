@@ -1,5 +1,5 @@
 {
-  "name": "vctx",
+  "name": "vctx-cli",
   "version": "1.0.0",
   "description": "Extract VS Code context for AI - works with VS Code, Cursor, and other VS Code-based IDEs",
   "main": "index.js",
@@ -26,10 +26,10 @@
   "homepage": "https://vctx.io",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/vctx"
+    "url": "https://github.com/lars-hagen/vctx"
   },
   "bugs": {
-    "url": "https://github.com/yourusername/vctx/issues"
+    "url": "https://github.com/lars-hagen/vctx/issues"
   },
   "devDependencies": {
     "code-inspector-plugin": "^0.20.17"
