@@ -1,8 +1,19 @@
 # vctx
 
-Extract VS Code context for AI - open files, selections, and pinned tabs. Works with any VS Code-based IDE (VS Code, Cursor, etc.)
+Seamlessly share your IDE perspective. Work naturally, communicate effortlessly.
 
 [vctx.io](https://vctx.io) | [npm](https://www.npmjs.com/package/vctx-cli)
+
+## Born from Repetitive Frustration
+
+Another debugging session with AI. Another round of:
+- "I'm looking at line 42 in main.js"
+- "The error is in the function that starts at line 156"
+- "I have three files open related to this issue"
+
+The repetition is exhausting. 
+
+**vctx contextualizes your IDE perspective into text.** Just run it - AI sees your open files, selections, pinned tabs. Work exactly as you always have, but now your IDE features become communication tools.
 
 ## Features
 
@@ -137,20 +148,22 @@ To disable smart mode and see all sections:
 vctx -r  # Raw mode shows all sections
 ```
 
-## For Claude Users
+## Steering AI with IDE Features
 
-This tool provides comprehensive VS Code context to help Claude understand:
-- What files you're currently working on
-- Which files are pinned (important/persistent)
-- What text you have selected (areas of focus)
-- Your workspace structure
+By default, vctx captures everything AI needs to understand your context. When you need more control, your natural IDE actions become steering mechanisms:
 
-**Recommended usage with Claude:**
+- **Pin a file** you're already working with → AI knows it's important
+- **Select code** you're already reading → AI focuses attention there  
+- **Keep files open** for context → AI sees your working set
+
+No special commands or modes. Just use your IDE naturally.
+
+**Seamless usage:**
 ```bash
 vctx  # That's it!
 ```
 
-Copy the output and paste it into Claude for enhanced debugging context.
+Copy the output and paste it to share your perspective.
 
 ## Technical Details
 

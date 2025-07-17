@@ -1,7 +1,7 @@
 {
   "name": "vctx-cli",
   "version": "1.0.0",
-  "description": "Extract VS Code context for AI - works with VS Code, Cursor, and other VS Code-based IDEs",
+  "description": "Seamlessly contextualize your IDE perspective - work naturally while AI sees what you see",
   "main": "index.js",
   "bin": {
     "vctx": "./index.js"

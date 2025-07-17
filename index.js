@@ -551,7 +551,6 @@ program
         ['-o', 'Open files'],
         ['-p', 'Pinned files'],
         ['-w', 'Workspace info'],
-        ['', ''],
         ['-rc', 'Raw + content'],
         ['-sc', 'Selections + content'],
         ['-oc', 'Open files + content'],
