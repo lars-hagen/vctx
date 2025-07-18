@@ -1,6 +1,6 @@
 {
   "name": "vctx-cli",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Seamlessly contextualize your IDE perspective - work naturally while AI sees what you see",
   "main": "index.js",
   "bin": {

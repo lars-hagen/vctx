@@ -10,7 +10,8 @@
       "mcp__playwright-default__browser_snapshot",
       "mcp__playwright-default__browser_click",
       "mcp__playwright-default",
-      "Bash(npx jsrepo add:*)"
+      "Bash(npx jsrepo add:*)",
+      "Bash(git push:*)"
     ],
     "deny": []
   }

@@ -83,6 +83,7 @@ vctx -w   # Just workspace info
 vctx -j              # JSON output for scripts
 vctx -c              # Include file content (default: on)
 vctx -r              # Raw format with all sections
+vctx --all-selections # Show selections from all open files
 vctx --no-refresh    # Skip automatic state refresh
 vctx --help          # Show all options
 ```
@@ -155,6 +156,20 @@ By default, vctx captures everything AI needs to understand your context. When y
 - **Pin a file** you're already working with → AI knows it's important
 - **Select code** you're already reading → AI focuses attention there  
 - **Keep files open** for context → AI sees your working set
+
+### Smart Selection Filtering (NEW in v1.0.2)
+
+By default, vctx only shows selections from the **currently visible file**. This prevents stale selections from cluttering your context when you've moved to a different file.
+
+**Default behavior (visible file only):**
+```bash
+vctx  # Shows selections from the file you're looking at
+```
+
+**Show all selections:**
+```bash
+vctx --all-selections  # Shows selections from all open files
+```
 
 No special commands or modes. Just use your IDE naturally.
 

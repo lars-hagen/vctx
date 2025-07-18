@@ -399,6 +399,44 @@ class VSCodeInspector {
     }
   }
 
+  async getActiveFile(workspace) {
+    try {
+      const result = this.queryDatabase(
+        workspace.stateDbPath,
+        "SELECT value FROM ItemTable WHERE key = 'memento/workbench.parts.editor'"
+      );
+
+      if (!result?.value) return null;
+
+      const editorState = JSON.parse(result.value);
+      const activeGroup = editorState['editorpart.state']?.activeGroup;
+      const gridData = editorState['editorpart.state']?.serializedGrid?.root?.data || [];
+      
+      // Find the active group
+      for (const group of gridData) {
+        if (group.type === 'leaf' && group.data?.id === activeGroup) {
+          const mru = group.data.mru || [];
+          const activeIndex = mru[0];
+          
+          if (activeIndex !== undefined && group.data.editors?.[activeIndex]) {
+            const editor = group.data.editors[activeIndex];
+            
+            // Check if it's a file editor
+            if (editor.id === 'workbench.editors.files.fileEditorInput' && editor.value) {
+              const editorData = JSON.parse(editor.value);
+              return editorData.resourceJSON?.fsPath || null;
+            }
+          }
+          break;
+        }
+      }
+      
+      return null; // No file is currently visible (could be terminal, output, etc.)
+    } catch (err) {
+      return null;
+    }
+  }
+
   async getSelections(workspace) {
     try {
       const result = this.queryDatabase(
@@ -476,9 +514,10 @@ class VSCodeInspector {
       VSCodeInspector.forceStateRefresh();
     }
 
-    const [openFiles, selections] = await Promise.all([
+    const [openFiles, selections, activeFile] = await Promise.all([
       this.getOpenFiles(workspace),
-      this.getSelections(workspace)
+      this.getSelections(workspace),
+      this.getActiveFile(workspace)
     ]);
 
     // Add selection info to open files (only for file types, not terminals)
@@ -501,9 +540,16 @@ class VSCodeInspector {
 
     const pinnedFiles = openFiles.filter(f => f.pinned);
     
-    // Filter selections to only include those from open files
-    const openFilePaths = openFiles.map(f => f.path);
-    const openFileSelections = selections.filter(s => openFilePaths.includes(s.file));
+    // Filter selections based on context
+    let filteredSelections;
+    if (options.allSelections) {
+      // Show all selections from open files (old behavior)
+      const openFilePaths = openFiles.map(f => f.path);
+      filteredSelections = selections.filter(s => openFilePaths.includes(s.file));
+    } else {
+      // Default: only show selections from the currently visible file
+      filteredSelections = activeFile ? selections.filter(s => s.file === activeFile) : [];
+    }
 
     return {
       workspace: {
@@ -512,7 +558,8 @@ class VSCodeInspector {
       },
       openFiles,
       pinnedFiles,
-      selections: openFileSelections
+      selections: filteredSelections,
+      activeFile // Include this for debugging/awareness
     };
   }
 }
@@ -527,6 +574,7 @@ program
   .option('-c, --content', 'Include full file content for all open files')
   .option('-t, --terminals', 'Include terminals in output')
   .option('--legacy-format', 'Use legacy selection format')
+  .option('--all-selections', 'Show selections from all open files (not just visible)')
   .option('--no-smart', 'Show all sections (including redundant)')
   .option('--no-refresh', 'Skip automatic state refresh')
   .option('--no-color', 'Disable colored output')
@@ -565,6 +613,7 @@ program
       const opts = [
         ['-j, --json', 'JSON output'],
         ['-t, --terminals', 'Include terminals'],
+        ['--all-selections', 'Show all file selections'],
         ['--no-refresh', 'Skip auto-refresh'],
         ['--no-smart', 'Show all sections'],
         ['--legacy-format', 'Old selection format']
@@ -580,7 +629,7 @@ program
       
       help += '\nNotes:\n';
       help += `${indent}• Auto-refreshes VS Code state (brief app switch)\n`;
-      help += `${indent}• Shows selected content only by default\n`;
+      help += `${indent}• Shows selections from visible file only (use --all-selections for all)\n`;
       help += `${indent}• File paths default to current directory\n`;
       
       return help;
@@ -599,7 +648,8 @@ program
       const globalOpts = program.opts();
       const context = await inspector.getRawContext(filePath, {
         includeContent: globalOpts.content !== false,  // Default to true
-        forceRefresh: globalOpts.refresh
+        forceRefresh: globalOpts.refresh,
+        allSelections: globalOpts.allSelections
       });
       
       if (globalOpts.json) {
@@ -630,7 +680,8 @@ program
       const globalOpts = program.opts();
       const context = await inspector.getRawContext(filePath, {
         includeContent: globalOpts.content !== false,  // Default to true
-        forceRefresh: globalOpts.refresh
+        forceRefresh: globalOpts.refresh,
+        allSelections: globalOpts.allSelections
       });
       
       // Filter out terminals unless -t flag is used
@@ -659,7 +710,8 @@ program
       const globalOpts = program.opts();
       const context = await inspector.getRawContext(filePath, {
         includeContent: globalOpts.content !== false,  // Default to true
-        forceRefresh: globalOpts.refresh
+        forceRefresh: globalOpts.refresh,
+        allSelections: globalOpts.allSelections
       });
       
       // Filter out terminals unless -t flag is used
@@ -688,7 +740,8 @@ program
       const globalOpts = program.opts();
       const context = await inspector.getRawContext(filePath, {
         includeContent: globalOpts.content !== false,  // Default to true
-        forceRefresh: globalOpts.refresh
+        forceRefresh: globalOpts.refresh,
+        allSelections: globalOpts.allSelections
       });
       
       console.log(LLMFormatter.selections(context.selections, {
